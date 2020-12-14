@@ -1,9 +1,9 @@
 {
-  "name": "ScriptAutoRunner",
+  "name": "ScriptAutoRunner for JJ",
   "version": "0.0.0",
-  "homepage": "https://github.com/nakajmg/ScriptAutoRunner",
+  "homepage": "https://github.com/bibineko/ScriptAutoRunner",
   "authors": [
-    "nakajmg <nakajima.jmg@gmail.com>"
+    "Tomofumi Oga <tomofumi.oga@gmail.com>"
   ],
   "description": "Injects Script into the any website it able to autorun as well.",
   "main": "index.html",

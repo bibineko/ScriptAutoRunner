@@ -1,26 +1,26 @@
-(function() {
+(function () {
   var DEFAULT_SCRIPT = {
     id: null,
     enable: false,
-    name: 'Script',
-    type: 'snippet',
-    src: '',
-    code: '',
-    host: ''
+    name: "Script",
+    type: "snippet",
+    src: "",
+    code: "",
+    host: "",
   };
 
   var DEFAULT_OPTIONS = {
-    exclude: ''
+    exclude: "",
   };
-  
-  var storageKey = 'SAR';
-  
+
+  var storageKey = "SAR";
+
   var vm = new Vue({
-    el: '#app',
+    el: "#app",
     data: {
       power: true,
       scripts: [],
-      options: {}
+      options: {},
     },
     methods: {
       toggleSwitch() {
@@ -39,13 +39,13 @@
         if (this.scripts.length === 0) {
           return 0;
         }
-        var numbers = _.map(this.scripts, 'id');
+        var numbers = _.map(this.scripts, "id");
         var num = _.max(numbers);
-        
+
         return num + 1;
       },
       removeScript(index) {
-        if (window.confirm('Are you sure you want to delete?')) {
+        if (window.confirm("Are you sure you want to delete?")) {
           this.scripts.$remove(index);
         }
       },
@@ -73,9 +73,12 @@
         this.save();
       },
       _save() {
-        return _.debounce(function() {
-          this._setStorage(this.$data);
-        }.bind(this), 300);
+        return _.debounce(
+          function () {
+            this._setStorage(this.$data);
+          }.bind(this),
+          300
+        );
       },
       onKeyup() {
         this.save();
@@ -87,43 +90,56 @@
         window.localStorage.setItem(storageKey, JSON.stringify(data));
       },
       _loadScripts() {
-        var data =  JSON.parse(window.localStorage.getItem(storageKey));
-        this.$set('power', data.power);
-        this.$set('scripts', data.scripts);
-        if (!data.options) {
-          this.$set('options', DEFAULT_OPTIONS);
+        var data = JSON.parse(window.localStorage.getItem(storageKey));
+        /** added */
+        for (let i = 0; i < data.scripts.length; i++) {
+          data.scripts[i].host = data.scripts[i].host.replace(
+            /^https:\/\//g,
+            ""
+          );
+          data.scripts[i].host = data.scripts[i].host.replace(
+            /^http:\/\//g,
+            ""
+          );
+          data.scripts[i].host = data.scripts[i].host.replace(/\/.*/g, "");
         }
-        else {
-          this.$set('options', data.options);
+        /** end */
+        this.$set("power", data.power);
+        this.$set("scripts", data.scripts);
+        if (!data.options) {
+          this.$set("options", DEFAULT_OPTIONS);
+        } else {
+          this.$set("options", data.options);
         }
       },
       _init() {
-        var data = window.localStorage.getItem('SRA');
+        var data = window.localStorage.getItem("SRA");
         var newData = window.localStorage.getItem(storageKey);
-        
+
         if (!newData) {
           if (data) {
             this._setStorage(JSON.parse(data));
-            window.localStorage.removeItem('SRA');
+            window.localStorage.removeItem("SRA");
+          } else {
+            this._setStorage({
+              power: true,
+              scripts: [],
+              options: DEFAULT_OPTIONS,
+            });
           }
-          else {
-            this._setStorage({power: true, scripts: [], options: DEFAULT_OPTIONS});
-          }
-        }
-        else {
+        } else {
           if (data) {
-            window.localStorage.removeItem('SRA');
+            window.localStorage.removeItem("SRA");
           }
         }
       },
       toggleSetting() {
-        if (_.includes(this.$els.setting.classList, 'show')) {
-          this.$els.setting.classList.remove('show');
+        if (_.includes(this.$els.setting.classList, "show")) {
+          this.$els.setting.classList.remove("show");
+        } else {
+          this.$els.setting.classList.add("show");
         }
-        else {
-          this.$els.setting.classList.add('show');
-        }
-      }
+      },
     },
     created() {
       this._init();
@@ -131,10 +147,9 @@
       this.save = this._save();
     },
     ready() {
-      this.$watch('scripts', function(val, oldVal) {
+      this.$watch("scripts", function (val, oldVal) {
         this._setStorage(this.$data);
       });
-    }
+    },
   });
-  
 })();
