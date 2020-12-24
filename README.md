@@ -1,6 +1,6 @@
 # ScriptAutoRunner for JJ
 
-Injects to any Script into a Website. It can be autorun as well.
+Injects to any Script into all frames within a Website. It can be autorun as well. This add-in was forked from nakajmg/ScriptAutoRunner.
 
 ![](ss/02.png)
 
